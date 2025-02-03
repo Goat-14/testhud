@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUD AR Interface</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+            color: cyan;
+            font-family: Arial, sans-serif;
+        }
+        #cameraFeed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        .hud-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none;
+        }
+        .hud-header, .hud-footer {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .hud-data {
+            font-size: 18px;
+        }
+        .target {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border: 2px solid red;
+            border-radius: 50%;
+            animation: pulse 1s infinite alternate;
+        }
+        @keyframes pulse {
+            from { transform: translate(-50%, -50%) scale(1); }
+            to { transform: translate(-50%, -50%) scale(1.2); }
+        }
+    </style>
+</head>
+<body>
+    <video id="cameraFeed" autoplay playsinline></video>
+    
+    <div class="hud-container">
+        <div class="hud-header">
+            <div class="hud-data" id="altitude">🚀 Altitude: 1200m</div>
+            <div class="hud-data" id="speed">💨 Vitesse: 900 km/h</div>
+            <div class="hud-data" id="fuel">⛽ Carburant: 78%</div>
+        </div>
+        <div class="target"></div>
+        <div class="hud-footer">
+            <div class="hud-data" id="temperature">🌡️ Temp. ext: -5°C</div>
+            <div class="hud-data" id="gps">📍 GPS: 48.8566° N, 2.3522° E</div>
+        </div>
+    </div>
+    
+    <script>
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                document.getElementById("cameraFeed").srcObject = stream;
+            } catch (error) {
+                console.error("Erreur lors de l'activation de la caméra :", error);
+            }
+        }
+        startCamera();
+    </script>
+</body>
+</html>
